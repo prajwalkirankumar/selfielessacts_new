@@ -115,10 +115,8 @@
             caption:$(".caption").val(),
             timestamp:mydate,
             imgB64:srcData.split(",")[1],
-            username:$(".username").val();
-        window.location.href = "index.html";
+            username:$(".username").val()
         };
-
 
         $.post(domainURL + "/api/v1/acts",requestJson)
          .done(function(data){
