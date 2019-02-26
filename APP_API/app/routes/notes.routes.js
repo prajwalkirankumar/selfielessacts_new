@@ -1,6 +1,6 @@
 module.exports = (app) => {
     const acts = require('../controllers/note.controller.js');
-    
+
     var cors = require('cors');
     app.options('*', cors());
     //Add a user
@@ -21,6 +21,8 @@ module.exports = (app) => {
     app.all('/api/v1/acts/:actId',acts.removeAct);
     // Upload Act
     app.all('/api/v1/acts', acts.uploadAct);
+    //List all users
+    app.all('/api/v1/users', acts.listUsers);
     // Retrieve all Notes
     app.get('/notes', acts.findAll);
 };

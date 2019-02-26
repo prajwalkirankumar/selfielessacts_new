@@ -269,9 +269,9 @@ exports.removeAct = (req,res) => {
             }
             });
         });
-        
 
-        
+
+
     }
     else{
         res.status(405).send();
@@ -358,4 +358,36 @@ exports.findAll = (req, res) => {
             message: err.message || "Some error occurred while retrieving notes."
         });
     });
+};
+
+
+//List all users
+exports.listUsers = (req,res) => {
+    if(req.method == 'GET'){
+        if(!req.body){
+            res.status(400).send({
+                // message: "user Name missing!"
+            });
+        }
+
+            User.find({}, 'username', function(err, someValue){
+                    if(err)
+                    {
+                        res.status(400).send({
+                            // message: "user Name missing!"
+                        });
+                    }
+                  }
+                ).then(data => {
+                if(data.length){
+                          res.status(200).send(data);
+                }
+                else{
+                    res.status(204).send({});
+                }
+            });
+    }
+    else{
+        res.status(405).send();
+    }
 };
