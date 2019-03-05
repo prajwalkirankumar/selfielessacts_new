@@ -45,7 +45,7 @@ const urlConfig = require('./config/database.config.js');
 mongoose.Promise = global.Promise;
 
 // Connecting to the database
-mongoose.connect(dbConfig.actUrl, {
+mongoose.connect(dbConfig.dbUrl, {
         useNewUrlParser: true
 }).then(() => {
     console.log("Successfully connected to the database");
@@ -56,13 +56,13 @@ mongoose.connect(dbConfig.actUrl, {
 
 // define a simple route
 app.get('/', (req, res) => {
-    res.json({"message": "Welcome to EasyNotes application. Take notes quickly. Organize and keep track of all your notes."});
+    res.json({"message": "Welcome to Acts Microservice."});
 });
 app.post('/',(req,res) => {
 	console.log(req.body);
 	res.send({status:'SUCCESS'});
 });
-require('./app/routes/notes.routes.js')(app);
+require('./app/routes/acts.routes.js')(app);
 
 // listen for requests
 app.listen(3000, () => {

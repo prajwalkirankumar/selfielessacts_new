@@ -1,5 +1,5 @@
 module.exports = (app) => {
-    const acts = require('../controllers/note.controller.js');
+    const acts = require('../controllers/acts.controller.js');
 
     var cors = require('cors');
     app.options('*', cors());

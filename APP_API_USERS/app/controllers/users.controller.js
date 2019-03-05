@@ -1,4 +1,4 @@
-const schemas = require('../models/note.model.users.js');
+const schemas = require('../models/users.model.js');
 const isBase64 = require('is-base64');
 const date = require('date-and-time');
 const User = schemas.User;

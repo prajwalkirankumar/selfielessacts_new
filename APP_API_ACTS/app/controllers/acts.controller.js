@@ -1,4 +1,4 @@
-const schemas = require('../models/note.model.js');
+const schemas = require('../models/acts.model.js');
 const isBase64 = require('is-base64');
 const date = require('date-and-time');
 const Act = schemas.Act;
