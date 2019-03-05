@@ -7,6 +7,8 @@ module.exports = (app) => {
     app.all('/api/v1/users',acts.addUser);
     //Remove a user
     app.all('/api/v1/users/:username',acts.removeUser);
+    //List all users
+    app.all('/api/v1/users',acts.listUsers);
     //Authenticate a user
     app.all('/api/v1/authenticate/:username',acts.authenticateUser);
 

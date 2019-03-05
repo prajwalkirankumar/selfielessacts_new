@@ -3,10 +3,6 @@ module.exports = (app) => {
 
     var cors = require('cors');
     app.options('*', cors());
-    //Add a user
-    app.all('/api/v1/users',acts.addUser);
-    //Remove a user
-    app.all('/api/v1/users/:username',acts.removeUser);
     // List all categories and add cat
     app.all('/api/v1/categories',acts.commonCat);
     // Remove a cat
