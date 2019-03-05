@@ -1,3 +1,4 @@
 module.exports = {
-    url: 'mongodb://localhost:27017/easy-notes'
+    actUrl: 'mongodb://localhost:27017/acts',
+    userUrl: 'mongodb://localhost:27017/users',
 }

@@ -269,9 +269,9 @@ exports.removeAct = (req,res) => {
             }
             });
         });
-        
 
-        
+
+
     }
     else{
         res.status(405).send();
