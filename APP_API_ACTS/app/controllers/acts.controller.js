@@ -1,9 +1,9 @@
-const schemas = require('../models/note.model.js');
+const schemas = require('../models/acts.model.js');
 const isBase64 = require('is-base64');
 const date = require('date-and-time');
 const Act = schemas.Act;
 const Category = schemas.Category;
-const User = schemas.User;
+var http = require('http');
 
 function isEmpty(obj) {
     for(var key in obj) {
@@ -12,61 +12,6 @@ function isEmpty(obj) {
     }
     return true;
 }
-
-exports.addUser = (req,res) => {
-    if(req.method=='POST'){
-        if(!req.body) {
-            return res.status(400).send({
-                message: "Empty JSON"
-            });
-        }
-        console.log(req.body);
-        const user = new User({
-            username:req.body.username,
-            password:req.body.password
-        });
-
-        if(!user.password.match("^[a-fA-F0-9]{40}$")){
-            return res.status(400).send({});
-        }
-
-        user.save().then(data => {
-            res.status(201).send({
-                //Act Created Successfully!
-            });
-        }).catch(err => {
-            res.status(400).send({
-                // message: "ActId provided is not unique!"
-            });
-        });
-    }
-    else{
-        res.status(405).send({});
-    }
-};
-
-exports.removeUser = (req,res) => {
-    if(req.method=="DELETE"){
-        if(!req.body) {
-            return res.status(400).send({
-                message: "Empty JSON"
-            });
-        }
-
-        console.log(req.params.username);
-        User.findOneAndDelete({username:req.params.username},function(err,callback){
-            if(callback)
-                res.status(200).send({});
-            else
-                res.status(400).send({});
-
-        });
-    }
-    else{
-        res.status(405).send({});
-        console.log(req.method);
-    }
-};
 
 // List all categories or insert category
 exports.commonCat = (req, res) => {
@@ -300,13 +245,42 @@ exports.uploadAct = (req,res) => {
         const success = {};
         // Save Act in the database
         console.log(act.category);
-        User.find({username:act.username}).then(data => {
-            if(data.length == 0){
-                res.status(400).send({
+
+        // User.find({username:act.username}).then(data => {
+        //     if(data.length == 0){
+        //         res.status(400).send({
+        //             message: "username doesn't exist"
+        //         });
+        //     }
+        // });
+
+        var options = {
+          hostname: '34.195.158.203',
+          port: 80,
+          path: '/api/v1/authenticate/'+act.username,
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          }
+        };
+
+        var statusCode;
+
+        var req = http.request(options, function(res) {
+          console.log('Status: ' + res.statusCode);
+          statusCode = res.statusCode;
+          console.log('Headers: ' + JSON.stringify(res.headers));
+          res.setEncoding('utf8');
+          res.on('data', function (body) {
+            console.log('Body: ' + body);
+          });
+        });
+
+        if(statusCode==400){
+            res.status(400).send({
                     message: "username doesn't exist"
                 });
-            }
-        });
+        }
         if(!isBase64(act.imgB64)){
             res.status(400).send({
                 message: "invalid b64 string"

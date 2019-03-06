@@ -15,13 +15,7 @@ const CategorySchema = mongoose.Schema({
     count:Number
 });
 
-const UserSchema = mongoose.Schema({
-    username:{ type:String, index:{unique:true}},
-    password:String
-});
-
 module.exports = {
     Act : mongoose.model('Act', ActSchema),
     Category : mongoose.model('Category', CategorySchema),
-    User : mongoose.model('User',UserSchema)
 };
