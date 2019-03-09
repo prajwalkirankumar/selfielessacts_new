@@ -13,19 +13,24 @@
   <div class="home-btn">  <a href="index.html" class="home">Home</a> </div>
 
   <div class="form">
-    <form class="login-form">
+    <form class="signin-form">
+      <p style="color:rgb(0,0,0,0.8);">Login</p>
+      <input type="text" class="username-signin" placeholder="username"/>
+      <input type="password" class="password-signin"placeholder="password"/>
+      <button class="login" onclick="location.href='index.html'" type="button">Login</button>
+      <p class="message"><a href="#">Create/delete account</a></p>
+    </form>
+    <form class="register-form">
       <p style="color:rgb(0,0,0,0.8);">New User</p>
       <input type="text" class="username-create" placeholder="username"/>
       <input type="password" class="password-create"placeholder="password"/>
       <button class="create">create</button>
-      <p class="message"><a href="#">Delete Account</a></p>
-    </form>
-    <form class="register-form">
+      <p class="message">Already registered? <a href="#">Signin</a></p>
+      <br><br><br>
       <p style="color:rgb(0,0,0,0.8);">Remove User</p>
       <input type="text" class="username-delete" placeholder="username"/>
       <!-- <input type="password" placeholder="password"/> -->
       <button class="delete">delete</button>
-      <p class="message">Not registered? <a href="#">Create an account</a></p>
     </form>
   </div>
 </div>
