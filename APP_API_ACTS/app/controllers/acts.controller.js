@@ -293,6 +293,14 @@ exports.uploadAct = (req,res) => {
             });
         }
 
+        Category.findOne({categoryName:act.category},function(err,results){
+            if(results==NULL){
+                res.status(400).send({
+                    message: "Category Doesnt Exist"
+                });
+            }
+        });
+
         act.save().then(data => {
             Category.updateOne({categoryName:act.category},{$inc:{count:1}}).then(response => {
             if(response['n'] == 0){
@@ -307,12 +315,6 @@ exports.uploadAct = (req,res) => {
         }).catch(err => {
             res.status(400).send({
                 message: "ActId provided is not unique!"
-            });
-            res.status(405).send({
-                // message: "Bad Request!"
-            });
-            res.status(500).send({
-                message: err.message || "Some error occurred while creating the Act."
             });
         });
     }
