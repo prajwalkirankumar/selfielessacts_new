@@ -17,6 +17,8 @@ module.exports = (app) => {
     app.all('/api/v1/acts/:actId',acts.removeAct);
     // Upload Act
     app.all('/api/v1/acts', acts.uploadAct);
+    //List all users
+    app.all('/api/v1/users', acts.listUsers);
     // Retrieve all Notes
     app.get('/notes', acts.findAll);
 };
