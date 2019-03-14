@@ -11,7 +11,7 @@ function isEmpty(obj) {
     return true;
 }
 
-exports.addUser = (req,res) => {
+exports.allUser = (req,res) => {
     if(req.method=='POST'){
         if(!req.body) {
             return res.status(400).send({
@@ -30,13 +30,37 @@ exports.addUser = (req,res) => {
 
         user.save().then(data => {
             res.status(201).send({
-                //Act Created Successfully!
+                // Act Created Successfully!
             });
         }).catch(err => {
             res.status(400).send({
-                // message: "ActId provided is not unique!"
+                message: "ActId provided is not unique!"
             });
         });
+    }
+    else if(req.method == 'GET'){
+        if(!req.body){
+            res.status(400).send({
+                message: "user Name missing!"
+            });
+        }
+
+            User.find({}, 'username', function(err, someValue){
+                    if(err)
+                    {
+                        res.status(400).send({
+                            message: "user Name missing!"
+                        });
+                    }
+                  }
+                ).then(data => {
+                if(data.length){
+                          res.status(200).send(data);
+                }
+                else{
+                    res.status(204).send({});
+                }
+            });
     }
     else{
         res.status(405).send({});
@@ -65,38 +89,6 @@ exports.removeUser = (req,res) => {
         console.log(req.method);
     }
 };
-
-//List all users
-exports.listUsers = (req,res) => {
-    if(req.method == 'GET'){
-        if(!req.body){
-            res.status(400).send({
-                // message: "user Name missing!"
-            });
-        }
-
-            User.find({}, 'username', function(err, someValue){
-                    if(err)
-                    {
-                        res.status(400).send({
-                            // message: "user Name missing!"
-                        });
-                    }
-                  }
-                ).then(data => {
-                if(data.length){
-                          res.status(200).send(data);
-                }
-                else{
-                    res.status(204).send({});
-                }
-            });
-    }
-    else{
-        res.status(405).send();
-    }
-};
-
 
 exports.authenticateUser = (req,res) => {
     if(req.method == 'POST'){
