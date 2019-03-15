@@ -248,14 +248,15 @@ exports.uploadAct = (req,res) => {
         var options = {
           hostname: '34.195.158.203',
           port: 8080,
-          path: '/api/v1/authenticate/'+act.username,
-          method: 'POST',
+          path: '/api/v1/users/',
+          method: 'GET',
           headers: {
               'Content-Type': 'application/json',
           }
         };
 
         var statusCode;
+        var reqBody;
         console.log("Making req");
         var req = http.request(options, function(res1) {
           console.log('Status: ' + res1.statusCode);
@@ -263,12 +264,15 @@ exports.uploadAct = (req,res) => {
           console.log('Headers: ' + JSON.stringify(res1.headers));
           res1.setEncoding('utf8');
           res1.on('data', function (body) {
-            console.log('Body: ' + body);
+            console.log('Body: ' + JSON.parse(body));
+            reqBody = JSON.parse(body);
           });
           res1.on('end',function(){
               {
+
                   console.log("Status Code "+statusCode);
-                  if(statusCode==400){
+
+                  if(!reqBody.includes(act.username)){
                       res.status(400).send({
                               message: "username doesn't exist"
                           });

@@ -45,20 +45,38 @@ exports.allUser = (req,res) => {
             });
         }
 
-            User.find({}, 'username', function(err, someValue){
-                    if(err)
-                    {
-                        res.status(400).send({
-                            message: "user Name missing!"
-                        });
-                    }
-                    if(someValue){
-                        res.status(200).send(someValue);
-                    }
-                    else{
-                        res.status(204).send({});
-                    }
-                });
+        User.find({}).then(data=>{
+            var newjson = [];
+            var count = 0;
+            for(var i=0;i<data.length;i++){
+                newjson.push(data[i].username);
+                count++;
+            }
+            // console.log(newjson);
+            if(count){
+                res.status(200).send(newjson);
+            }
+            else{
+                res.status(204).send(newjson);
+            }
+        }).catch(err=>{
+        });
+            // User.find({}, 'username', function(err, someValue){
+            //         // if(err)
+            //         // {
+            //         //     res.status(400).send({
+            //         //         message: "user Name missing!"
+            //         //     });
+            //         // }
+            //         // if(someValue){
+            //         //
+            //         //     res.status(200).send(someValue);
+            //         // }
+            //         // else{
+            //         //     res.status(204).send({});
+            //         // }
+            //     });
+            // User.find({username})
             //     .then(data => {
             //     if(data.length){
             //               res.status(200).send(data);
