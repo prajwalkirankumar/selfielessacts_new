@@ -244,19 +244,10 @@ exports.uploadAct = (req,res) => {
         });
         const success = {};
         // Save Act in the database
-        console.log(act.category);
-
-        // User.find({username:act.username}).then(data => {
-        //     if(data.length == 0){
-        //         res.status(400).send({
-        //             message: "username doesn't exist"
-        //         });
-        //     }
-        // });
-
+        console.log(act.username);
         var options = {
           hostname: '34.195.158.203',
-          port: 80,
+          port: 8080,
           path: '/api/v1/authenticate/'+act.username,
           method: 'POST',
           headers: {
@@ -265,58 +256,66 @@ exports.uploadAct = (req,res) => {
         };
 
         var statusCode;
-
-        var req = http.request(options, function(res) {
-          console.log('Status: ' + res.statusCode);
-          statusCode = res.statusCode;
-          console.log('Headers: ' + JSON.stringify(res.headers));
-          res.setEncoding('utf8');
-          res.on('data', function (body) {
+        console.log("Making req");
+        var req = http.request(options, function(res1) {
+          console.log('Status: ' + res1.statusCode);
+          statusCode = res1.statusCode;
+          console.log('Headers: ' + JSON.stringify(res1.headers));
+          res1.setEncoding('utf8');
+          res1.on('data', function (body) {
             console.log('Body: ' + body);
           });
-        });
+          res1.on('end',function(){
+              {
+                  console.log("Status Code "+statusCode);
+                  if(statusCode==400){
+                      res.status(400).send({
+                              message: "username doesn't exist"
+                          });
+                  }
 
-        if(statusCode==400){
-            res.status(400).send({
-                    message: "username doesn't exist"
-                });
-        }
-        if(!isBase64(act.imgB64)){
-            res.status(400).send({
-                message: "invalid b64 string"
-            });
-        }
+                  if(!isBase64(act.imgB64)){
+                      res.status(400).send({
+                          message: "invalid b64 string"
+                      });
+                  }
 
-        if(!date.isValid(act.timestamp,'DD-MM-YYYY:ss-mm-hh')){
-            res.status(400).send({
-                message: "invalid timestamp"
-            });
-        }
+                  if(!date.isValid(act.timestamp,'DD-MM-YYYY:ss-mm-hh')){
+                      res.status(400).send({
+                          message: "invalid timestamp"
+                      });
+                  }
 
-        Category.findOne({categoryName:act.category},function(err,results){
-            if(results==NULL){
-                res.status(400).send({
-                    message: "Category Doesnt Exist"
-                });
-            }
-        });
-
-        act.save().then(data => {
-            Category.updateOne({categoryName:act.category},{$inc:{count:1}}).then(response => {
-            if(response['n'] == 0){
-                res.status(400).send({
-                    message: "category doesn't exist"
-                });
-            }
-            });
-            res.status(201).send({
-                //Act Created Successfully!
-            });
-        }).catch(err => {
-            res.status(400).send({
-                message: "ActId provided is not unique!"
-            });
-        });
+                  Category.findOne({categoryName:act.category},function(err,results){
+                      console.log(act.category);
+                      if(results==null){
+                          console.log(results);
+                          res.status(400).send({
+                              message: "Category Doesnt Exist"
+                          });
+                      }
+                  }).then(function(){
+                      act.save().then(data => {
+                          Category.updateOne({categoryName:act.category},{$inc:{count:1}}).then(response => {
+                        //   if(response['n'] == 0){
+                        //       res.status(400).send({
+                        //           message: "category doesn't exist"
+                        //       });
+                        //   }
+                          });
+                          res.status(201).send({
+                              //Act Created Successfully!
+                          });
+                      }).catch(err => {
+                          res.status(400).send({
+                              message: "ActId provided is not unique!"
+                          });
+                      });
+                  });
+              }
+          });
+      });
+      req.end();
     }
     else{
         res.status(405).send();
@@ -338,32 +337,32 @@ exports.findAll = (req, res) => {
 
 
 //List all users
-exports.listUsers = (req,res) => {
-    if(req.method == 'GET'){
-        if(!req.body){
-            res.status(400).send({
-                // message: "user Name missing!"
-            });
-        }
-
-            User.find({}, 'username', function(err, someValue){
-                    if(err)
-                    {
-                        res.status(400).send({
-                            // message: "user Name missing!"
-                        });
-                    }
-                  }
-                ).then(data => {
-                if(data.length){
-                          res.status(200).send(data);
-                }
-                else{
-                    res.status(204).send({});
-                }
-            });
-    }
-    else{
-        res.status(405).send();
-    }
-};
+// exports.listUsers = (req,res) => {
+//     if(req.method == 'GET'){
+//         if(!req.body){
+//             res.status(400).send({
+//                 // message: "user Name missing!"
+//             });
+//         }
+//
+//             User.find({}, 'username', function(err, someValue){
+//                     if(err)
+//                     {
+//                         res.status(400).send({
+//                             // message: "user Name missing!"
+//                         });
+//                     }
+//                   }
+//                 ).then(data => {
+//                 if(data.length){
+//                           res.status(200).send(data);
+//                 }
+//                 else{
+//                     res.status(204).send({});
+//                 }
+//             });
+//     }
+//     else{
+//         res.status(405).send();
+//     }
+// };

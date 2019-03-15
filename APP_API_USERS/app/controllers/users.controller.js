@@ -52,15 +52,21 @@ exports.allUser = (req,res) => {
                             message: "user Name missing!"
                         });
                     }
-                  }
-                ).then(data => {
-                if(data.length){
-                          res.status(200).send(data);
-                }
-                else{
-                    res.status(204).send({});
-                }
-            });
+                    if(someValue){
+                        res.status(200).send(someValue);
+                    }
+                    else{
+                        res.status(204).send({});
+                    }
+                });
+            //     .then(data => {
+            //     if(data.length){
+            //               res.status(200).send(data);
+            //     }
+            //     else{
+            //         res.status(204).send({});
+            //     }
+            // });
     }
     else{
         res.status(405).send({});
@@ -92,9 +98,10 @@ exports.removeUser = (req,res) => {
 
 exports.authenticateUser = (req,res) => {
     if(req.method == 'POST'){
-        var username = req.body.username;
-        User.find({username:username}).then(data => {
+        var username = req.params.username;
+        User.find({username:req.params.username}).then(data => {
             if(data.length == 0){
+                console.log(req.body.username);
                 res.status(400).send({
                     message: "username doesn't exist"
                 });
