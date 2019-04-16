@@ -5,6 +5,9 @@ const Act = schemas.Act;
 const Category = schemas.Category;
 var http = require('http');
 
+
+var numberOfRequests = 0;
+
 function isEmpty(obj) {
     for(var key in obj) {
         if(obj.hasOwnProperty(key))
@@ -15,6 +18,7 @@ function isEmpty(obj) {
 
 // List all categories or insert category
 exports.commonCat = (req, res) => {
+    numberOfRequests++;
     if(req.method=='GET'){
         categoryList = Category.find({})
         .then(data=>{
@@ -59,6 +63,7 @@ exports.commonCat = (req, res) => {
 };
 
 exports.removeCat = (req,res) => {
+    numberOfRequests++;
 	if(req.method =='DELETE'){
 		if(!req.body) {
             return res.status(400).send({
@@ -85,6 +90,7 @@ exports.removeCat = (req,res) => {
 
 // List acts for a given category
 exports.listCat = (req,res) => {
+    numberOfRequests++;
     if(req.method == 'GET'){
         if(!req.params.categoryName){
             res.status(400).send({
@@ -152,6 +158,7 @@ exports.listCat = (req,res) => {
 
 // List Number of acts for a given category
 exports.listCatCount = (req,res) => {
+    numberOfRequests++;
     if(req.method == 'GET'){
         Category.find({categoryName:req.params.categoryName}).then(data => {
             console.log(data);
@@ -170,6 +177,7 @@ exports.listCatCount = (req,res) => {
 
 //Upvote an Act
 exports.upvoteAct = (req,res) => {
+    numberOfRequests++;
     if(req.method == 'POST'){
         if(!req.body) {
             return res.status(400).send({
@@ -195,6 +203,7 @@ exports.upvoteAct = (req,res) => {
 
 //Remove an Act
 exports.removeAct = (req,res) => {
+    numberOfRequests++;
     if(req.method == 'DELETE'){
         if(!req.body) {
             return res.status(400).send({
@@ -225,6 +234,7 @@ exports.removeAct = (req,res) => {
 // Upload a new act
 // url needs to be done
 exports.uploadAct = (req,res) => {
+    numberOfRequests++;
     //Error Handling - 400
     if(req.method == 'POST'){
         if(!req.body) {
@@ -246,8 +256,8 @@ exports.uploadAct = (req,res) => {
         // Save Act in the database
         console.log(act.username);
         var options = {
-          hostname: '34.195.158.203',
-          port: 8080,
+          hostname: '3.209.143.142',
+          port: 80,
           path: '/api/v1/users/',
           method: 'GET',
           headers: {
@@ -340,33 +350,39 @@ exports.findAll = (req, res) => {
 };
 
 
-//List all users
-// exports.listUsers = (req,res) => {
-//     if(req.method == 'GET'){
-//         if(!req.body){
-//             res.status(400).send({
-//                 // message: "user Name missing!"
-//             });
-//         }
-//
-//             User.find({}, 'username', function(err, someValue){
-//                     if(err)
-//                     {
-//                         res.status(400).send({
-//                             // message: "user Name missing!"
-//                         });
-//                     }
-//                   }
-//                 ).then(data => {
-//                 if(data.length){
-//                           res.status(200).send(data);
-//                 }
-//                 else{
-//                     res.status(204).send({});
-//                 }
-//             });
-//     }
-//     else{
-//         res.status(405).send();
-//     }
-// };
+//Counts or Resets the number of requests made to this microservice
+exports.countRequests = (req, res) => {
+    if(req.method=='GET'){
+        res.status(200).send([numberOfRequests]);
+    }
+    else if(req.method=='DELETE'){
+        numberOfRequests = 0;
+        res.status(200).send();
+    }
+    else{
+        res.status(405).send();
+    }
+};
+
+
+//Returns total no of acts
+exports.totalActs = (req, res) => {
+    var countGlobal = 0;
+    if(req.method=='GET'){
+        Act.count({}, function(err, count){
+            console.log( "Number of docs: ", count);
+            countGlobal = count;
+        }).then(function(){
+            res.status(200).send([countGlobal]);
+        });
+    }
+
+    else{
+        res.status(405).send();
+    }
+};
+
+exports.add = function(){
+    numberOfRequests++;
+    console.log(numberOfRequests);
+}

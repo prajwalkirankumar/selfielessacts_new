@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-var cors = require('cors');
+// var cors = require('cors');
 // create express app
 const app = express();
 
@@ -24,6 +24,7 @@ app.use(function (req, res, next) {
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
 
+    // console.log(res);
     // Request headers you wish to allow
     // res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
 
@@ -55,13 +56,14 @@ mongoose.connect(dbConfig.dbUrl, {
 });
 
 // define a simple route
-app.get('/', (req, res) => {
-    res.json({"message": "Welcome to Acts Microservice."});
-});
-app.post('/',(req,res) => {
-	console.log(req.body);
-	res.send({status:'SUCCESS'});
-});
+// app.get('/', (req, res) => {
+//     res.json({"message": "Welcome to Acts Microservice."});
+// });
+// app.post('/',(req,res) => {
+// 	console.log(req.body);
+// 	res.send({status:'SUCCESS'});
+// });
+
 require('./app/routes/acts.routes.js')(app);
 
 // listen for requests

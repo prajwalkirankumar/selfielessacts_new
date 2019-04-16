@@ -60,15 +60,17 @@ mongoose.connect(dbConfig.dbUrl, {
 });
 
 // define a simple route
-app.get('/', (req, res) => {
-    res.json({"message": "Welcome to Users Microservice."});
-});
+// app.get('/', (req, res) => {
+//     res.json({"message": "Welcome to Users Microservice."});
+// });
+//
+// app.post('/',(req,res) => {
+// 	console.log(req.body);
+// 	res.send({status:'SUCCESS'});
+// });
 
-app.post('/',(req,res) => {
-	console.log(req.body);
-	res.send({status:'SUCCESS'});
-});
 require('./app/routes/users.routes.js')(app);
+
 
 // listen for requests
 app.listen(3000, () => {

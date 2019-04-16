@@ -3,6 +3,10 @@ const isBase64 = require('is-base64');
 const date = require('date-and-time');
 const User = schemas.User;
 
+var numberOfRequests = 0;
+
+
+
 function isEmpty(obj) {
     for(var key in obj) {
         if(obj.hasOwnProperty(key))
@@ -12,6 +16,7 @@ function isEmpty(obj) {
 }
 
 exports.allUser = (req,res) => {
+    numberOfRequests++;
     if(req.method=='POST'){
         if(!req.body) {
             return res.status(400).send({
@@ -92,6 +97,7 @@ exports.allUser = (req,res) => {
 };
 
 exports.removeUser = (req,res) => {
+    numberOfRequests++;
     if(req.method=="DELETE"){
         if(!req.body) {
             return res.status(400).send({
@@ -114,22 +120,23 @@ exports.removeUser = (req,res) => {
     }
 };
 
-exports.authenticateUser = (req,res) => {
-    if(req.method == 'POST'){
-        var username = req.params.username;
-        User.find({username:req.params.username}).then(data => {
-            if(data.length == 0){
-                console.log(req.body.username);
-                res.status(400).send({
-                    message: "username doesn't exist"
-                });
-            }
-            else{
-                res.status(200).send({});
-            }
-        });
+
+
+//Counts or Resets the number of requests made to this microservice
+exports.countRequests = (req, res) => {
+    if(req.method=='GET'){
+        res.status(200).send([numberOfRequests]);
+    }
+    else if(req.method=='DELETE'){
+        numberOfRequests = 0;
+        res.status(200).send();
     }
     else{
         res.status(405).send();
     }
+};
+
+exports.add = function(){
+    numberOfRequests++;
+    console.log(numberOfRequests);
 }

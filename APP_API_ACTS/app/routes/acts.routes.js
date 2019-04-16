@@ -1,9 +1,12 @@
 module.exports = (app) => {
     const acts = require('../controllers/acts.controller.js');
 
-    var cors = require('cors');
-    app.options('*', cors());
+    // var cors = require('cors');
+    // app.options('*', cors());
     // List all categories and add cat
+    //Count number of acts
+    app.all('/api/v1/acts/count',acts.totalActs);
+    
     app.all('/api/v1/categories',acts.commonCat);
     // Remove a cat
     app.all('/api/v1/categories/:categoryName',acts.removeCat);
@@ -21,4 +24,11 @@ module.exports = (app) => {
     // app.all('/api/v1/users', acts.listUsers);
     // Retrieve all Notes
     app.get('/notes', acts.findAll);
+    //Count and reset number of requests made to microservice
+    app.all('/api/v1/_count',acts.countRequests);
+
+    // app.all("*",function(){
+    //     var add = require("../controllers/acts.controller.js");
+    //     // add.add();
+    // });
 };

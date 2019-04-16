@@ -7,9 +7,11 @@ module.exports = (app) => {
     app.all('/api/v1/users',acts.allUser);
     //Remove a user
     app.all('/api/v1/users/:username',acts.removeUser);
-    //List all users
-    // app.all('/api/v1/users',acts.listUsers);
-    //Authenticate a user
-    app.all('/api/v1/authenticate/:username',acts.authenticateUser);
+    //Count and reset number of requests made to microservice
+    app.all('/api/v1/_count',acts.countRequests);
 
+    // app.all("*",function(){
+    //     var add = require("../controllers/users.controller.js");
+    //     // add.add();
+    // });
 };
