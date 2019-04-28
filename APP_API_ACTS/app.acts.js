@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 // var cors = require('cors');
 // create express app
 const app = express();
-
+// var b = require('')
 var corsOptions = {
   origin: 'http://localhost',
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204

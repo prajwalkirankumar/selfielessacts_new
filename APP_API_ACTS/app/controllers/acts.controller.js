@@ -4,9 +4,10 @@ const date = require('date-and-time');
 const Act = schemas.Act;
 const Category = schemas.Category;
 var http = require('http');
-
+var fs = require('fs');
 
 var numberOfRequests = 0;
+var crashed = false;
 
 function isEmpty(obj) {
     for(var key in obj) {
@@ -256,7 +257,7 @@ exports.uploadAct = (req,res) => {
         // Save Act in the database
         console.log(act.username);
         var options = {
-          hostname: '3.209.143.142',
+          hostname: 'selfielessacts-891589330.us-east-1.elb.amazonaws.com',
           port: 80,
           path: '/api/v1/users/',
           method: 'GET',
@@ -386,3 +387,55 @@ exports.add = function(){
     numberOfRequests++;
     console.log(numberOfRequests);
 }
+
+exports.healthCheck = (req,res) => {
+    if(req.method == 'GET'){
+        var limit = 0,usage = 0,percentInUse = 20;
+        fs.readFile("/sys/fs/cgroup/memory/memory.limit_in_bytes",function(err,data){
+            limit = data.toString('ascii');
+            fs.readFile("/sys/fs/cgroup/memory/memory.usage_in_bytes",function(err,data){
+                usage = data.toString('ascii');
+                percentInUse = 100 - ((limit - usage)/limit)*100 ;
+
+                if(percentInUse > 80){
+                    res.status(500).send();
+                }
+                else{
+                    //Check DB Read and Write
+                    const cat = new Category({
+                        categoryName : req.body[0],
+                        count : 0,
+                    });
+
+                    cat.save().then(data => {
+                            Category.findOneAndDelete({categoryName:cat.categoryName},function(err,callback){
+                                if(callback){
+                                    console.log("Here1")
+                                    res.status(200).send();
+                                }
+                                else
+                                    res.status(400).send({
+                                        message:"DB ERROR"
+                                });
+                            });
+                    }).catch(err => {
+                        res.status(400).send({
+                        });
+                    });
+                }
+            });
+        });
+    }
+    else{
+        res.status(405).send();
+    }
+};
+
+exports.crash = (req,res) => {
+    if(req.method == 'POST'){
+        module.exports.crash = true;
+    }
+    else{
+        res.status(405).send();
+    }
+};

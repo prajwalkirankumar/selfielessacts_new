@@ -4,6 +4,10 @@ module.exports = (app) => {
     // var cors = require('cors');
     // app.options('*', cors());
     // List all categories and add cat
+    // Crash API
+    app.all('/api/v1/_crash',acts.crash)
+    // Health Check API
+    app.all('/api/v1/_health',acts.healthCheck);
     //Count number of acts
     app.all('/api/v1/acts/count',acts.totalActs);
     
